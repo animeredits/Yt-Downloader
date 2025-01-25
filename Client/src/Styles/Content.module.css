@@ -1,0 +1,124 @@
+@font-face {
+  font-family: 'Chirp-Bold';
+  src: url(../assets/Font/Chirp-Bold.ebb56aba.woff2);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 30px auto;
+  /* box-shadow: 0 .125rem .25rem rgba(255, 255, 255, 0.075); */
+  border-top: 2px solid rgba(255, 255, 255, 0.814);
+  border-bottom: 2px solid rgba(255, 255, 255, 0.814);
+  border-radius: 0.2rem;
+  margin-bottom: 10px;
+}
+
+a {
+  color: rgb(0, 191, 255);
+}
+
+a:visited,
+a:hover,
+a:link {
+  text-decoration: none !important;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-family: 'Chirp-Bold ,sans-serif';
+}
+
+p {
+  margin: 0 0 8px;
+  line-height: 25px;
+  color: gainsboro;
+}
+
+.img,
+img {
+  max-width: 100%;
+}
+
+.wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.ftcoSection {
+  padding: 0 20px 20px;
+  margin: 5px 0;
+  line-height: 20px;
+}
+
+.title {
+  font-weight: 500;
+  font-size: 25px;
+  line-height: 35px;
+}
+
+.listFeature {
+  font-weight: 300;
+  list-style-type: none;
+  padding-left: 40px;
+}
+
+.listFeature li {
+  margin-bottom: 10px;
+  list-style-type: disc;
+}
+
+.faqUl {
+  padding: 0;
+}
+
+.faqUl li {
+  list-style: none;
+}
+
+.faqItemContent {
+  color: rgba(255, 255, 255, 0.814);
+}
+
+.faqItemTitle h4 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.sfContainer {
+  margin: 0 auto;
+}
+
+
+
+.sfFaq {
+  line-height: 25px;
+  font-size: 16px;
+}
+
+.center {
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .ftcoSection {
+    padding: 5px;
+  }
+  .title {
+    margin-bottom: 8px;
+  }
+
+  .faqItemContent {
+    margin-top: 0;
+  }
+  .listFeature {
+    padding-left: 19px;
+  }
+  .faqItemTitle h4 {
+    margin-bottom: 7px;
+    font-weight: 400;
+  }
+  p{
+    font-weight: 350;
+  }
+}

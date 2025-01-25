@@ -1,0 +1,120 @@
+.navbar {
+  display: flex;
+  justify-content: space-around; /* Use space-between to push items to the edges */
+  align-items: center;
+  padding: 0.5rem 1rem; /* Adjusted padding for better spacing */
+  background: transparent;
+  backdrop-filter : blur(25px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.28);
+  color: #d9d9d9;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: padding 0.3s ease; /* Add transition for padding */
+  z-index: 1000;
+}
+
+.navbarBrand a {
+  font-weight: 300;
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 1.5rem;
+}
+
+.navbarToggle {
+  display: none;
+  border: none;
+  font-size: 1.5rem;
+  background: none;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.navbarMenu {
+  display: flex;
+  align-items: center;
+  transition: opacity 0.3s ease; /* Add transition for menu visibility */
+}
+
+.navbarMenu ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navbarMenu ul li {
+  margin: 0 0.8rem; /* Adjusted margin for better spacing */
+}
+
+
+.navbarMenu ul li a {
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 300;
+}
+
+
+
+/* Media Queries */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 1.5rem;
+    flex-direction: column;
+    background-color: rgba(0, 0, 0, 0.786);
+  }
+  .navbarBrand {
+    position: absolute;
+    left: 1.3rem;
+    top: 0.5rem;
+  }
+  .navbarMenu {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    opacity: 0; /* Start with opacity 0 */
+  }
+
+  .navbarMenu.isActive {
+    display: flex;
+    opacity: 1; /* Transition to opacity 1 */
+  }
+
+  .navbarToggle {
+    padding: 0.1rem 3rem;
+    display: block;
+    position: absolute;
+    right: 1.3rem; /* Adjusted right position */
+    top: 0.5rem; /* Adjusted top position */
+  }
+
+  .navbarMenu ul {
+    flex-direction: column;
+    width: 100%;
+    align-items: flex-start; /* Center-align items */
+    margin-top: 1.5rem;
+  }
+
+  .navbarMenu ul li {
+    margin: 0.5rem 0; /* Adjusted margin for better spacing */
+  }
+
+  .navbarMenu ul li a {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+  .scrollToTop {
+    bottom: 10px;
+    right: 10px;
+    padding: 8px 16px;
+    font-size: 24px;
+  }
+}
+
+body.navbarExpanded .content {
+  padding-top: 3.5rem; /* Adjust based on the height of your expanded navbar */
+  transition: padding-top 0.3s ease;
+}
+

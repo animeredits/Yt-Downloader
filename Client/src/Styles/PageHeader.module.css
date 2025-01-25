@@ -1,0 +1,19 @@
+.title {
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    padding-block: 17px;
+  }
+  
+  .pageTitle{ 
+    font-weight: 600;
+    font-size: 25px;
+    margin: 65px auto 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .pageDescription{
+    margin: 0 auto 8px;
+    line-height: 25px;
+    transition: all 0.3s ease;
+  }
