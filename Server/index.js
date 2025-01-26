@@ -7,7 +7,8 @@ const dotenv = require("dotenv");
 const { v4: uuidv4 } = require("uuid");
 const ffmpeg = require("fluent-ffmpeg");
 const bodyParser = require("body-parser");
-const youtubedl = require("youtube-dl-exec");
+const ytdl = require("ytdl-core");
+const ytdlp = require("yt-dlp-exec");
 
 const app = express();
 dotenv.config();
@@ -23,30 +24,22 @@ function sanitizeFilename(filename) {
   return filename.replace(/[^a-zA-Z0-9\s.-]/g, "").replace(/\s+/g, "_");
 }
 
-const downloadThumbnail = async (url, outputPath) => {
-  const response = await axios({ url, responseType: "stream" });
-  return new Promise((resolve, reject) => {
-    response.data
-      .pipe(fs.createWriteStream(outputPath))
-      .on("finish", resolve)
-      .on("error", reject);
-  });
-};
-
 // Endpoint for MP3 downloads
 app.post("/download", async (req, res) => {
   const { url } = req.body;
 
   try {
-    const videoInfo = await youtubedl(url, { dumpSingleJson: true });
-    const videoTitle = sanitizeFilename(videoInfo.title);
-    const thumbnailURL = videoInfo.thumbnail;
+    const videoInfo = await ytdlp(url, {
+      dumpSingleJson: true,
+    });
 
+    const videoTitle = sanitizeFilename(videoInfo.title);
     const filename = `${videoTitle}.mp3`;
     const filepath = path.join(__dirname, "downloads", filename);
 
+    // Use yt-dlp to extract audio
     await new Promise((resolve, reject) => {
-      youtubedl(url, {
+      ytdlp(url, {
         extractAudio: true,
         audioFormat: "mp3",
         output: filepath,
@@ -59,7 +52,7 @@ app.post("/download", async (req, res) => {
       downloadLink: `${Domain}/download/${filename}`,
       videoDetails: {
         title: videoInfo.title,
-        thumbnail: thumbnailURL,
+        thumbnail: videoInfo.thumbnail,
         duration: videoInfo.duration,
       },
     });
@@ -69,41 +62,27 @@ app.post("/download", async (req, res) => {
   }
 });
 
-// Endpoint for MP4 downloads
 app.post("/download-mp4", async (req, res) => {
   const { url } = req.body;
 
   try {
-    const videoInfo = await youtubedl(url, { dumpSingleJson: true });
+    // Get video details
+    const videoInfo = await ytdlp(url, { dumpSingleJson: true });
     const videoTitle = sanitizeFilename(videoInfo.title);
-    const thumbnailURL = videoInfo.thumbnail;
+    const filename = `${videoTitle}.mp4`;
+    const filepath = path.join(__dirname, "downloads", filename);
 
-    const videoFilename = `${videoTitle}_${uuidv4()}.mp4`;
-    const videoPath = path.join(__dirname, "downloads", videoFilename);
-
-    const thumbnailFilename = `${videoTitle}_${uuidv4()}.jpg`;
-    const thumbnailPath = path.join(__dirname, "downloads", thumbnailFilename);
-
-    // Download video
-    await new Promise((resolve, reject) => {
-      youtubedl(url, {
-        format: "bestvideo+bestaudio",
-        output: videoPath,
-        mergeOutputFormat: "mp4",
-      })
-        .then(resolve)
-        .catch(reject);
+    // Download MP4
+    await ytdlp(url, {
+      format: "bestvideo+bestaudio/best",
+      output: filepath,
     });
 
-    // Download thumbnail
-    await downloadThumbnail(thumbnailURL, thumbnailPath);
-
-    // Send response
     res.json({
-      downloadLink: `${Domain}/download/${videoFilename}`,
+      downloadLink: `${req.protocol}://${req.get("host")}/download/${filename}`,
       videoDetails: {
         title: videoInfo.title,
-        thumbnail: thumbnailURL,
+        thumbnail: videoInfo.thumbnail,
         duration: videoInfo.duration,
       },
     });
@@ -112,6 +91,7 @@ app.post("/download-mp4", async (req, res) => {
     res.status(500).json({ error: "Failed to download MP4" });
   }
 });
+
 
 // Endpoint to handle file downloads (Stream to the default download folder)
 app.get("/download/:filename", async (req, res) => {

@@ -1,8 +1,8 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from "react";
 import Spiner from "../Spiner";
-import Styles from "../../Styles/InputBox.module.css";
 import PageHeader from "../Content/PageHeader";
+import Styles from "../../Styles/InputBox.module.css";
 
 const Mp4 = () => {
   const [url, setUrl] = useState("");
@@ -71,20 +71,16 @@ const Mp4 = () => {
     if (downloadLink) {
       const tempAnchor = document.createElement("a");
       tempAnchor.href = downloadLink;
-      
-      // Extract filename from the downloadLink
-      const filename = downloadLink.substring(downloadLink.lastIndexOf('/') + 1);
-      
-      // Set the download attribute to dynamically set the filename
-      tempAnchor.setAttribute("download", filename);
-      
+      tempAnchor.download = downloadLink.substring(downloadLink.lastIndexOf('/') + 1);
+      document.body.appendChild(tempAnchor);
       tempAnchor.click();
-      tempAnchor.remove();
+      document.body.removeChild(tempAnchor);
     } else {
       setError("Download link is not available");
     }
   };
-
+  
+  
   const handlePasteClick = async () => {
     if (isPasteOpen) {
       setIsPasteOpen(false);
@@ -101,7 +97,6 @@ const Mp4 = () => {
 
   const handleClearClick = () => {
     setUrl("");
-    setInputError(false); // Clear input error state
     if (isPasteOpen) {
       setIsPasteOpen(false);
       inputRef.current.focus();
@@ -114,9 +109,7 @@ const Mp4 = () => {
       {!videoDetails && (
         <form
           id="search-form"
-          className={Styles.searchForm}
-          action="/en42/youtube-mp4"
-          method="GET"
+          className={Styles.searchForm} 
         >
           <div className={Styles.inputGroup}>
             <input
@@ -128,17 +121,25 @@ const Mp4 = () => {
               onChange={(e) => setUrl(e.target.value)}
               className={Styles.formControl}
               aria-label="Search"
-              placeholder="Paste YouTube URL"
+              placeholder="Paste URL Youtube"
             />
             <div className={Styles.inputGroupBtn}>
-              <span className={Styles.paste} onClick={handlePasteClick}>
+              <span
+                className={Styles.paste}
+                id="paste"
+                onClick={handlePasteClick}
+              >
                 <span>
                   <i className={Styles.iconBtn}></i>
                   {isPasteOpen ? "Clear" : "Paste"}
                 </span>
               </span>
               {url && (
-                <span className={Styles.paste} onClick={handleClearClick}>
+                <span
+                  className={Styles.paste}
+                  id="clear"
+                  onClick={handleClearClick}
+                >
                   <span>
                     <i className={Styles.iconBtn}></i>
                     Clear
@@ -150,29 +151,43 @@ const Mp4 = () => {
                 onClick={handleDownload}
                 type="button"
               >
-                Download
+                Download{" "}
               </button>
             </div>
           </div>
         </form>
       )}
-      {inputError && <p className={Styles.error}>Please enter a valid YouTube URL.</p>}
+      {inputError && (
+        <p className={Styles.error}>Please enter a valid YouTube URL.</p>
+      )}
       {error && <p className={Styles.error}>{error}</p>}
       <div style={{ textAlign: "center" }}>
         {loading && <Spiner />}
-        {loading && !videoDetails && "Retrieving data, please wait a few seconds!"}
+        {loading &&
+          !videoDetails &&
+          "Retrieving data, please wait a few seconds!"}
       </div>
       {!loading && videoDetails && (
-        <div className={`${Styles.downloadContainer} ${showDownloadContainer ? Styles.show : ""}`}>
+        <div
+          className={`${Styles.downloadContainer} ${
+            showDownloadContainer ? Styles.show : ""
+          }`}
+        >
           <div className={Styles.details}>
             <img src={videoDetails.thumbnail} alt="Thumbnail" />
             <div className={Styles.info}>
               <h4>{videoDetails.title}</h4>
               <p>{formatDuration(videoDetails.duration)}</p>
-              <button className={Styles.downloadButton} onClick={handleDownloadButtonClick}>
-                Download MP4
+              <button
+                className={Styles.downloadButton}
+                onClick={handleDownloadButtonClick}
+              >
+                Download Mp4
               </button>
-              <button className={Styles.refreshButton} onClick={handleRefreshPage}>
+              <button
+                className={Styles.refreshButton}
+                onClick={handleRefreshPage}
+              >
                 Download other video
               </button>
             </div>
